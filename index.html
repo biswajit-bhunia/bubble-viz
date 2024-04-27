@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #container{
+            width: 1000px;
+            height: 500px;
+            border: 3px solid rgb(181, 167, 167);
+            padding: 10px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: flex-end;
+        }
+        .bar{
+            width: 15px;
+            background-color: rgb(123, 123, 216);
+        }
+        .selected {
+            background-color: rgb(112, 201, 124); /* Change the color to highlight */
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        let container = document.getElementById('container');
+        function createBars(bars){
+            container.innerHTML = ""
+            bars.forEach(bar => {
+                const div = document.createElement('div')
+                div.style.height = `${bar}px`
+                div.classList.add('bar')
+                container.appendChild(div)
+            });
+        }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        async function sort(arr) {
+            const n = arr.length;
+            for (let i = 0; i < n - 1; i++) {
+                for (let j = 0; j < n - i - 1; j++) {
+                    document.querySelectorAll('.bar')[j].classList.add('selected');
+                    document.querySelectorAll('.bar')[j + 1].classList.add('selected');
+                    await sleep(40); 
+                    document.querySelectorAll('.bar')[j].classList.remove('selected');
+                    document.querySelectorAll('.bar')[j + 1].classList.remove('selected');
+                    if (arr[j] > arr[j + 1]) {
+                        let temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                        createBars(arr)
+                        await sleep(40)
+                    }
+                }
+            }
+        }
+        function randomArray(length, max) {
+            return Array.from({ length }, () => Math.floor(Math.random() * max) + 1);
+        }
+        const arr = randomArray(40, 400); // Generate random array
+
+        createBars(arr)
+        sort(arr)
+    </script>
+</body>
+</html>
